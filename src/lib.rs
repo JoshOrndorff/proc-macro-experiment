@@ -15,6 +15,8 @@ pub fn aggregate(_attrs: TokenStream, body: TokenStream) -> TokenStream {
         .variants
         .iter()
         .map(|variant| {
+            // Make sure there is only a single field, and if not, give a helpful error
+            assert!(variant.fields.len() == 1, "Each variant must have a single unnamed field");
             (
                 variant.ident.clone(),
                 variant
