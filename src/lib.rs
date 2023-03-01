@@ -36,7 +36,6 @@ pub fn aggregate(_attrs: TokenStream, body: TokenStream) -> TokenStream {
         #original_code
 
         // Now write all the From impls
-        //TODO How does it know that `variants` and `types` are the same length? And what if they're not?
         #(
             impl From<#types> for #outer_type {
                 fn from(b: #types) -> Self {
