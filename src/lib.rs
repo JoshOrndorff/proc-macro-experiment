@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, Ident, ItemEnum, Type};
+use syn::{parse_macro_input, ItemEnum};
 
 #[proc_macro_attribute]
 pub fn aggregate(_attrs: TokenStream, body: TokenStream) -> TokenStream {
@@ -11,7 +11,7 @@ pub fn aggregate(_attrs: TokenStream, body: TokenStream) -> TokenStream {
     // eprintln!("{:#?}", ast);
 
     let outer_type = ast.ident;
-    let variant_type_pairs: Vec<(Ident, Type)> = ast
+    let variant_type_pairs = ast
         .variants
         .iter()
         .map(|variant| {
@@ -27,16 +27,9 @@ pub fn aggregate(_attrs: TokenStream, body: TokenStream) -> TokenStream {
                     .ty
                     .clone(),
             )
-        })
-        .collect();
-    let variants = variant_type_pairs
-        .iter()
-        .map(|(v, _t)| v)
-        .collect::<Vec<_>>();
-    let types = variant_type_pairs
-        .iter()
-        .map(|(_v, t)| t)
-        .collect::<Vec<_>>();
+        });
+    let variants = variant_type_pairs.clone().map(|(v, _t)| v);
+    let types = variant_type_pairs.map(|(_v, t)| t);
 
     let output = quote! {
         // First keep the original code in tact
